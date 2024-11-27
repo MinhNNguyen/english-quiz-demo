@@ -1,8 +1,9 @@
-// App.js
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
 import SessionList from './components/SessionList'
 import SessionPage from './components/SessionPage'
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path='/session/:sessionId' element={<SessionPage />} />
         </Routes>
       </div>
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
     </Router>
   )
 }
