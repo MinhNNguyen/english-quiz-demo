@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import SessionList from './components/SessionList'
-import SessionPage from './components/SessionPage'
+import SessionList from './components/SessionList';
+import SessionPage from './components/SessionPage';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,9 +14,9 @@ const App = () => {
           <Route path='/session/:sessionId' element={<SessionPage />} />
         </Routes>
       </div>
-      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+      <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;
