@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import requestUtils from '../utils/request'
 
@@ -6,42 +7,52 @@ const SessionList = () => {
   const navigate = useNavigate()
 
   // Get list of available sessions
-  const [sessions, setSessions] = useState([
-    { id: 1, name: 'General Knowledge Quiz', status: 'open', participants: 5 },
-    { id: 2, name: 'Science Quiz', status: 'running', participants: 8 },
-    { id: 3, name: 'History Quiz', status: 'open', participants: 3 }
-  ])
+  const [sessions, setSessions] = useState([])
 
   useEffect(() => {
-    // Make a request for a user with a given ID
-    requestUtils
-      .get('/sessions')
-      .then((response) => {
-        console.log({ response })
-      })
-      .catch((error) => {
-        console.log({ error })
-      })
+    const fetchData = async () => {
+      const result = await requestUtils.get('/sessions')
+      if (result?.data?.sessions) {
+        setSessions(result.data.sessions)
+      }
+    }
+
+    fetchData()
+    .catch(error => {
+      console.error(error)
+    })
   }, [])
 
-  const createNewSession = () => {
-    const newSession = {
-      id: sessions.length + 1,
-      name: `New Quiz Session ${sessions.length + 1}`,
-      status: 'open',
-      participants: 0
+  const handleCreateNewSession = async () => {
+    try {
+      const result = await requestUtils.post('/sessions/create')
+      if (result?.data?.id) {
+        navigate(`/session/${result.data.id}`)
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
     }
-    setSessions([...sessions, newSession])
+  }
+
+  const handleJoinSession = async (sessionId) => {
+    try {
+      const result = await requestUtils.post(`/sessions/${sessionId}/join`)
+      if (result?.data?.result) {
+        navigate(`/session/${sessionId}`)
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   }
 
   return (
-    <div className='min-h-screen flex flex-col'>
+    <div className='w-full min-h-screen flex flex-col'>
       <div className='navbar bg-base-100 shadow-lg'>
         <div className='flex-1'>
           <h1 className='text-2xl font-bold px-4'>Quiz Sessions</h1>
         </div>
         <div className='flex-none'>
-          <button onClick={createNewSession} className='btn btn-primary'>
+          <button onClick={handleCreateNewSession} className='btn btn-primary'>
             Create New Session
           </button>
         </div>
@@ -62,7 +73,7 @@ const SessionList = () => {
                       </div>
                     </div>
                   </div>
-                  <button onClick={() => navigate(`/session/${session.id}`)} className='btn btn-success'>
+                  <button onClick={() => handleJoinSession(session.id)} className='btn btn-success'>
                     Join Session
                   </button>
                 </div>
