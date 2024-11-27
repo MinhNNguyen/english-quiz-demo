@@ -1,0 +1,94 @@
+{
+  "uuid": "aa052882-1d14-45c2-bda3-e8e563cdfbf4",
+  "lastMigration": 33,
+  "name": "English Quiz API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "b275f43c-8886-4f91-acad-94268c79b509",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "sessions",
+      "responses": [
+        {
+          "uuid": "2d753279-6b3a-4712-92c2-00b98e7c6630",
+          "body": " {\"sessions\": [{ \"id\": 1, \"name\": \"General Knowledge Quiz\", \"status\": \"open\", \"participants\": 5 }, { \"id\": 2, \"name\": \"Science Quiz\", \"status\": \"running\", \"participants\": 8 }, { \"id\": 3, \"name\": \"History Quiz\", \"status\": \"open\", \"participants\": 3 }]}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "b275f43c-8886-4f91-acad-94268c79b509"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
