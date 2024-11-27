@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { SessionI, SessionState, SessionCategoryMap } from '../types/session';
 import requestUtils from '../utils/request';
+import { ErrorList} from '../utils/errors';
 
 const SessionItem = ({ session }: {session: SessionI}) => {
     const navigate = useNavigate();
@@ -11,10 +12,11 @@ const SessionItem = ({ session }: {session: SessionI}) => {
       try {
         const result = await requestUtils.post(`/sessions/${sessionId}/join`);
         if (result?.data?.result) {
-          navigate(`/session/${sessionId}`);
+          navigate(`/sessions/${sessionId}`);
         }
       } catch (error) {
-        toast.error('Something went wrong!');
+        console.error(error);
+        toast.error(ErrorList.JOIN_SESSION_ERROR);
       }
     };
   

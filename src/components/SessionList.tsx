@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { SessionI } from '../types/session';
 import requestUtils from '../utils/request';
+import { ErrorList} from '../utils/errors';
 import SessionItem from './SessionItem'
 
 const SessionList = () => {
@@ -20,6 +21,7 @@ const SessionList = () => {
 
     fetchData().catch((error) => {
       console.error(error);
+      toast.error(ErrorList.FETCH_SESSION_LIST_ERROR);
     });
   }, []);
 
@@ -27,10 +29,11 @@ const SessionList = () => {
     try {
       const result = await requestUtils.post('/sessions/create');
       if (result?.data?.id) {
-        navigate(`/session/${result.data.id}`);
+        navigate(`/sessions/${result.data.id}`);
       }
     } catch (error) {
-      toast.error('Something went wrong!');
+      console.error(error);
+      toast.error(ErrorList.CREATE_SESSION_ERROR);
     }
   };
 
@@ -41,7 +44,7 @@ const SessionList = () => {
           <h1 className='text-2xl font-bold px-4'>Quiz Sessions</h1>
         </div>
         <div className='flex-none'>
-          <button onClick={handleCreateNewSession} className='btn btn-primary'>
+          <button onClick={handleCreateNewSession} className='btn btn-primary mr-4'>
             Create New Session
           </button>
         </div>
