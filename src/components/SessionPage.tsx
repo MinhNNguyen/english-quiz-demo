@@ -1,29 +1,45 @@
 // components/SessionPage.js
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react';
+import socketIOClient from "socket.io-client";
+import { useParams } from 'react-router-dom';
+
+const host = "http://localhost:3001";
 
 const SessionPage = () => {
-  const { sessionId } = useParams()
-  const [timeRemaining, setTimeRemaining] = useState(30)
+  // TODO: fetch session detail 
+  // Handle waiting time 
+  // Handle session start, user submit question
+  // Mock WS, 2 players update score on leaderboard
+
+  const socketRef = useRef();
+
+  useEffect(() => {
+    socketRef.current = socketIOClient.connect(host)
+  }, [])
+
+
+
+  const { sessionId } = useParams();
+  const [timeRemaining, setTimeRemaining] = useState(30);
   const [currentQuestion, setCurrentQuestion] = useState({
     title: 'What is the capital of France?',
     choices: ['London', 'Berlin', 'Paris', 'Madrid'],
     correctAnswer: 2
-  })
+  });
   const [leaderboard, setLeaderboard] = useState([
     { username: 'Player1', score: 100 },
     { username: 'Player2', score: 85 },
     { username: 'Player3', score: 70 }
-  ])
+  ]);
 
   useEffect(() => {
     const timer =
       timeRemaining > 0 &&
       setInterval(() => {
-        setTimeRemaining((prev) => prev - 1)
-      }, 1000)
-    return () => clearInterval(timer)
-  }, [timeRemaining])
+        setTimeRemaining((prev) => prev - 1);
+      }, 1000);
+    return () => clearInterval(timer);
+  }, [timeRemaining]);
 
   return (
     <div className='min-h-screen flex flex-col'>
@@ -31,23 +47,7 @@ const SessionPage = () => {
       <div className='navbar bg-base-100 shadow-lg'>
         <div className='flex-1'>
           <span className='text-lg font-semibold px-4'>Session ID: {sessionId}</span>
-        </div>
-        <div className='flex-none'>
-          <div className='dropdown dropdown-end'>
-            <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
-              <div className='w-10 rounded-full'>
-                <img src='/api/placeholder/40/40' alt='avatar' />
-              </div>
-            </label>
-            <ul tabIndex={0} className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52'>
-              <li>
-                <a>Player1</a>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
-            </ul>
-          </div>
+          <span className='text-lg font-semibold px-4'>Category: {sessionId}</span>
         </div>
       </div>
 
@@ -109,7 +109,7 @@ const SessionPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SessionPage
+export default SessionPage;
