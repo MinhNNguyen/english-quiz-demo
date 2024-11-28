@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { SessionI, SessionState, SessionCategoryMap } from '../types/session';
@@ -9,9 +10,10 @@ const SessionItem = ({ session }: { session: SessionI }) => {
   const navigate = useNavigate();
 
   const handleJoinSession = async (sessionId) => {
+    if (session.status !== SessionState.OPEN ) return;
     try {
       const result = await requestUtils.post(`/sessions/${sessionId}/join`);
-      if (result?.data?.result) {
+      if (result && !!result.data) {
         navigate(`/sessions/${sessionId}`);
       }
     } catch (error) {
@@ -33,8 +35,11 @@ const SessionItem = ({ session }: { session: SessionI }) => {
               </div>
             </div>
           </div>
-          <button onClick={() => handleJoinSession(session.id)} className='btn btn-success'>
-            Join Session
+          <button
+            onClick={() => handleJoinSession(session.id)}
+            className={classNames('btn', session.status === SessionState.OPEN ? 'btn-success' : 'btn-error')}
+          >
+            {session.status === SessionState.OPEN ? 'Join Session' : 'Cannot join'}
           </button>
         </div>
       </div>

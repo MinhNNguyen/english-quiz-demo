@@ -8,7 +8,6 @@ import SessionItem from './SessionItem';
 
 const SessionList = () => {
   const navigate = useNavigate();
-
   const [sessions, setSessions] = useState<SessionI[]>([]);
 
   useEffect(() => {

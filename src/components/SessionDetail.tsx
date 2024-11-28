@@ -6,9 +6,8 @@ import requestUtils from '../utils/request';
 import { ErrorList } from '../utils/errors';
 import { SessionCategoryMap, SessionState, SessionDetailI, QuestionI, SessionUserI } from '../types/session';
 
-const wsHost = 'http://localhost:3001';
 const TIME_PER_QUESTION = 30;
-const SAMPLE_USERNAME = "Player 1"
+const SAMPLE_USERNAME = 'Player 1';
 const SCORE_PER_QUESTION = 30;
 
 const SessionDetail = () => {
@@ -35,21 +34,21 @@ const SessionDetail = () => {
       if (!!result) {
         setCurrentQuestion({ ...currentQuestion, user: choiceIndex });
         if (choiceIndex === currentQuestion?.answer) {
-          setLeaderboard(leaderboard => leaderboard.map(user => {
-            if (user.name !== SAMPLE_USERNAME) return user;
-            return {
-              ...user,
-              score: user.score + SCORE_PER_QUESTION,
-            } 
-          }))
+          setLeaderboard((leaderboard) =>
+            leaderboard.map((user) => {
+              if (user.name !== SAMPLE_USERNAME) return user;
+              return {
+                ...user,
+                score: user.score + SCORE_PER_QUESTION
+              };
+            })
+          );
         }
       }
     } catch (error) {
       console.error(error);
       toast.error(ErrorList.SUBMIT_ANSWER_ERROR);
     }
-
-
   };
 
   useEffect(() => {
@@ -95,7 +94,7 @@ const SessionDetail = () => {
         }
       }
 
-      // This triggers when the timer is already set 
+      // This triggers when the timer is already set
       if (timeRemaining !== null && timeRemaining <= 0) {
         if (sessionState === SessionState.OPEN) {
           setSessionState(SessionState.RUNNING);
