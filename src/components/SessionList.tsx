@@ -3,8 +3,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { SessionI } from '../types/session';
 import requestUtils from '../utils/request';
-import { ErrorList} from '../utils/errors';
-import SessionItem from './SessionItem'
+import { ErrorList } from '../utils/errors';
+import SessionItem from './SessionItem';
 
 const SessionList = () => {
   const navigate = useNavigate();
