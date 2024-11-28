@@ -1,7 +1,6 @@
-// components/SessionPage.js
 import React, { useState, useEffect, useRef } from 'react';
+import classNames from 'classnames';
 import { toast } from 'react-toastify';
-import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import requestUtils from '../utils/request';
 import { ErrorList } from '../utils/errors';
@@ -9,6 +8,8 @@ import { SessionCategoryMap, SessionState, SessionDetailI, QuestionI, SessionUse
 
 const wsHost = 'http://localhost:3001';
 const TIME_PER_QUESTION = 30;
+const SAMPLE_USERNAME = "Player 1"
+const SCORE_PER_QUESTION = 30;
 
 const SessionDetail = () => {
   const { sessionId } = useParams();
@@ -19,7 +20,37 @@ const SessionDetail = () => {
   const [currentQuestion, setCurrentQuestion] = useState<QuestionI | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 
-  const socketRef = useRef();
+  // TODO: setup socket to listen to events and emit events when player select an answer
+
+  const handleAnswerQuestion = async (questionId, choiceIndex) => {
+    if (currentQuestion && currentQuestion.user !== null) {
+      // User already selected answer
+      return;
+    }
+
+    try {
+      const result = await requestUtils.put(`/sessions/${sessionId}/questions/${questionId}`, {
+        answer: choiceIndex
+      });
+      if (!!result) {
+        setCurrentQuestion({ ...currentQuestion, user: choiceIndex });
+        if (choiceIndex === currentQuestion?.answer) {
+          setLeaderboard(leaderboard => leaderboard.map(user => {
+            if (user.name !== SAMPLE_USERNAME) return user;
+            return {
+              ...user,
+              score: user.score + SCORE_PER_QUESTION,
+            } 
+          }))
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(ErrorList.SUBMIT_ANSWER_ERROR);
+    }
+
+
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,53 +74,49 @@ const SessionDetail = () => {
     setIsLoading(false);
   }, [sessionId]);
 
-  // Handle waiting time before session start
-  // Handle session start, user submit question
-  // Handle WS
-
-  // useEffect(() => {
-  //   socketRef.current = io(wsHost);
-
-  //   socketRef.current.on('connect', () => {
-  //     console.log(socketRef.current.id); // x8WIv7-mJelg7on_ALbx
-  //   });
-  //   socketRef.current.emit('hello', 'world');
-
-  //   // socketRef.current.on('sendDataServer', data => {
-  //   //   console.log({data})
-  //   // })
-
-  //   // return () => {
-  //   //   socketRef.current.disconnect();
-  //   // };
-  // }, []);
-
-  // Bug: not able to auto-set session state from running to finished yet
   useEffect(() => {
+    const updateQuestionInSession = (sessionDetail, currentTime) => {
+      const questionIndex = Math.floor((currentTime - sessionDetail.start) / TIME_PER_QUESTION);
+      setCurrentQuestion(sessionDetail.questions?.[questionIndex]);
+      const questionEndTime = sessionDetail.start + (questionIndex + 1) * TIME_PER_QUESTION;
+      setTimeRemaining(questionEndTime - currentTime);
+    };
+
     let timer;
     const currentTime = Math.round(Date.now() / 1000);
+    // Check if the timer need and session state should be updated
     if (!isLoading && !!sessionDetail && sessionState !== SessionState.FINISHED) {
-      if (sessionState === SessionState.OPEN) {
-        setTimeRemaining(sessionDetail.start - currentTime);
-      } else {
-        const questionIndex = Math.floor((currentTime - sessionDetail.start) / TIME_PER_QUESTION);
-        setCurrentQuestion(sessionDetail.questions?.[questionIndex]);
-        const questionEndTime = sessionDetail.start + (questionIndex + 1) * TIME_PER_QUESTION;
-        setTimeRemaining(questionEndTime - currentTime);
+      // This triggers when the timer is being set for the first time
+      if (timeRemaining === null) {
+        if (sessionState === SessionState.OPEN) {
+          setTimeRemaining(sessionDetail.start - currentTime);
+        } else {
+          updateQuestionInSession(sessionDetail, currentTime);
+        }
       }
-      timer = setInterval(() => {
-        setTimeRemaining((prev) => prev - 1);
-      }, 1000);
-      if (timeRemaining && timeRemaining <= 0) {
+
+      // This triggers when the timer is already set 
+      if (timeRemaining !== null && timeRemaining <= 0) {
         if (sessionState === SessionState.OPEN) {
           setSessionState(SessionState.RUNNING);
           setTimeRemaining(null);
-        } else if (sessionState === SessionState.RUNNING && currentTime > sessionDetail.end) {
-          setSessionState(SessionState.FINISHED);
-          setTimeRemaining(null);
+        } else if (sessionState === SessionState.RUNNING) {
+          if (currentTime >= sessionDetail.end) {
+            setSessionState(SessionState.FINISHED);
+            setTimeRemaining(null);
+          } else {
+            updateQuestionInSession(sessionDetail, currentTime);
+          }
         }
       }
+      // Update the timer
+      if (timeRemaining !== null) {
+        timer = setInterval(() => {
+          setTimeRemaining((prev) => prev - 1);
+        }, 1000);
+      }
     }
+
     return () => clearInterval(timer);
   }, [isLoading, sessionDetail, sessionState, timeRemaining]);
 
@@ -133,9 +160,16 @@ const SessionDetail = () => {
             <button
               key={index}
               onClick={() => {
-                /* Handle answer selection */
+                handleAnswerQuestion(currentQuestion.id, index);
               }}
-              className='btn btn-outline btn-lg h-24 normal-case text-lg'
+              className={classNames(
+                'btn btn-lg h-24 normal-case text-lg',
+                currentQuestion.user === null || currentQuestion.user !== index
+                  ? 'btn-outline'
+                  : currentQuestion.user === currentQuestion.answer
+                    ? 'btn-success'
+                    : 'btn-error'
+              )}
             >
               {choice}
             </button>

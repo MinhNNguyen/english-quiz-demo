@@ -110,7 +110,100 @@
       "responses": [
         {
           "uuid": "228280e7-3021-4644-8249-826f7d5aebcb",
-          "body": "{\n  \"id\": 10004,\n  \"category\": 4,\n  \"start\": 1732757120,\n  \"end\": 1732757210,\n  \"questions\": [\n    {\n      \"title\": \"What is the capchoital of France?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 3,\n      \"user\": null\n    },\n    {\n      \"title\": \"What is the capital of England?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 1,\n      \"user\": null\n    },\n    {\n      \"title\": \"What is the capital of Germany?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 2,\n      \"user\": null\n    }\n  ],\n  \"leaderboard\": [\n    {\n      \"name\": \"Player 1\",\n      \"score\": 0\n    }\n  ]\n}",
+          "body": "{\n  \"id\": 10004,\n  \"category\": 4,\n  \"start\": 1732760570,\n  \"end\": 1732760660,\n  \"questions\": [\n    {\n      \"id\": 148,\n      \"title\": \"What is the capital of France?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 2,\n      \"user\": null\n    },\n    {\n      \"id\": 278,\n      \"title\": \"What is the capital of England?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 0,\n      \"user\": null\n    },\n    {\n      \"id\": 292,\n      \"title\": \"What is the capital of Germany?\",\n      \"choices\": [\n        \"London\",\n        \"Berlin\",\n        \"Paris\",\n        \"Madrid\"\n      ],\n      \"answer\": 1,\n      \"user\": null\n    }\n  ],\n  \"leaderboard\": [\n    {\n      \"name\": \"Player 1\",\n      \"score\": 0\n    },\n    {\n      \"name\": \"Player 2\",\n      \"score\": 30\n    },\n    {\n      \"name\": \"Player 3\",\n      \"score\": 10\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c6c360ff-b9e8-4d67-abad-20ede3b68110",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "sessions/10004/questions/148",
+      "responses": [
+        {
+          "uuid": "9a3062e1-5f2e-4653-b2d2-5601d4c06222",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "8ee89b34-ea8e-46e9-80e1-60211ca23f3e",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "sessions/10004/questions/278",
+      "responses": [
+        {
+          "uuid": "8b84d0d8-03ea-4642-8e0b-8bfc794d389d",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "0fb17ba7-b72b-4595-9bae-67ba83ce5b99",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "sessions/10004/questions/292",
+      "responses": [
+        {
+          "uuid": "ac78ac9e-697c-4eef-bf23-67ab54caf06e",
+          "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -149,6 +242,18 @@
     {
       "type": "route",
       "uuid": "e28c78ea-5be2-4d3b-a939-826e5fd5be57"
+    },
+    {
+      "type": "route",
+      "uuid": "c6c360ff-b9e8-4d67-abad-20ede3b68110"
+    },
+    {
+      "type": "route",
+      "uuid": "8ee89b34-ea8e-46e9-80e1-60211ca23f3e"
+    },
+    {
+      "type": "route",
+      "uuid": "0fb17ba7-b72b-4595-9bae-67ba83ce5b99"
     }
   ],
   "proxyMode": false,

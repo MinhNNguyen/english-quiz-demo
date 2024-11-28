@@ -19,6 +19,7 @@ export interface SessionI {
 }
 
 export interface QuestionI {
+  id: number;
   title: string;
   choices: string[];
   answer: number;
