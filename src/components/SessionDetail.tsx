@@ -1,36 +1,65 @@
 // components/SessionPage.js
 import React, { useState, useEffect, useRef } from 'react';
-import socketIOClient from "socket.io-client";
+import { toast } from 'react-toastify';
+import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
+import requestUtils from '../utils/request';
+import { ErrorList } from '../utils/errors';
+import { SessionCategoryMap } from '../types/session';
 
-const host = "http://localhost:3001";
+const wsHost = 'http://localhost:3001';
 
-const SessionPage = () => {
-  // TODO: fetch session detail 
-  // Handle waiting time 
-  // Handle session start, user submit question
-  // Mock WS, 2 players update score on leaderboard
+const SessionDetail = () => {
+  const { sessionId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [sessionDetail, setSessionDetail] = useState();
+  const [leaderboard, setLeaderboard] = useState([]);
 
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = socketIOClient.connect(host)
-  }, [])
+    const fetchData = async () => {
+      const result = await requestUtils.get(`/sessions/${sessionId}`);
+      if (result?.data) {
+        setSessionDetail(result.data);
+        setLeaderboard(result.data.leaderboard);
+      }
+    };
 
+    fetchData().catch((error) => {
+      console.error(error);
+      toast.error(ErrorList.FETCH_SESSION_ERROR);
+    });
+    setIsLoading(false);
+  }, [sessionId]);
 
+  // Handle waiting time before session start
+  // Handle session start, user submit question
+  // Handle WS
 
-  const { sessionId } = useParams();
+  // useEffect(() => {
+  //   socketRef.current = io(wsHost);
+
+  //   socketRef.current.on('connect', () => {
+  //     console.log(socketRef.current.id); // x8WIv7-mJelg7on_ALbx
+  //   });
+  //   socketRef.current.emit('hello', 'world');
+
+  //   // socketRef.current.on('sendDataServer', data => {
+  //   //   console.log({data})
+  //   // })
+
+  //   // return () => {
+  //   //   socketRef.current.disconnect();
+  //   // };
+  // }, []);
+
   const [timeRemaining, setTimeRemaining] = useState(30);
   const [currentQuestion, setCurrentQuestion] = useState({
     title: 'What is the capital of France?',
     choices: ['London', 'Berlin', 'Paris', 'Madrid'],
     correctAnswer: 2
   });
-  const [leaderboard, setLeaderboard] = useState([
-    { username: 'Player1', score: 100 },
-    { username: 'Player2', score: 85 },
-    { username: 'Player3', score: 70 }
-  ]);
 
   useEffect(() => {
     const timer =
@@ -41,13 +70,17 @@ const SessionPage = () => {
     return () => clearInterval(timer);
   }, [timeRemaining]);
 
-  return (
+  return isLoading ? (
+    <div className='min-h-screen flex flex-col'>
+      <span className='m-auto loading loading-spinner loading-lg' />{' '}
+    </div>
+  ) : (
     <div className='min-h-screen flex flex-col'>
       {/* Top Menu */}
       <div className='navbar bg-base-100 shadow-lg'>
         <div className='flex-1'>
           <span className='text-lg font-semibold px-4'>Session ID: {sessionId}</span>
-          <span className='text-lg font-semibold px-4'>Category: {sessionId}</span>
+          <span className='text-lg font-semibold px-4'>Category: {SessionCategoryMap[sessionDetail?.category]}</span>
         </div>
       </div>
 
@@ -112,4 +145,4 @@ const SessionPage = () => {
   );
 };
 
-export default SessionPage;
+export default SessionDetail;
