@@ -17,3 +17,23 @@ export interface SessionI {
   participants: number;
   status: SessionState;
 }
+
+export interface QuestionI {
+  title: string;
+  choices: string[];
+  answer: number;
+  user: number | null;
+}
+
+export interface SessionUserI {
+  name: string;
+  score: number;
+}
+
+export interface SessionDetailI {
+  id: number;
+  category: number;
+  start: number;
+  end: number;
+  questions: QuestionI[];
+}
